@@ -7,6 +7,6 @@ request(`https://swapi-api.hbtn.io/api/films/${args[2]}`, (error, response) => {
     console.error('Error:', error);
   } else {
     const data = JSON.parse(response.body);
-    console.log(data['title']);
+    console.log(data.title);
   }
 });
