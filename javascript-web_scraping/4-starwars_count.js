@@ -4,7 +4,7 @@ const request = require('request');
 const args = process.argv;
 request(args[2], (error, response) => {
   if (error) {
-    console.error('Error:', error);
+    console.log(error);
   } else {
     const data = JSON.parse(response.body);
     let count = 0;
