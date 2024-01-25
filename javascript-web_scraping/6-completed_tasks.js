@@ -23,7 +23,9 @@ request(args[2], (error, response) => {
           }
         }
       }
-      users[ListUser[userID]] = taskComplete;
+      if (taskComplete !== 0) {
+        users[ListUser[userID]] = taskComplete;
+      }
     }
     console.log(users);
   }
