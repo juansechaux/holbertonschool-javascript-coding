@@ -8,16 +8,22 @@ request(args[2], (error, response) => {
   } else {
     const data = JSON.parse(response.body);
     const users = {};
-    for (let userID = 1; userID <= 10; userID++) {
+    const ListUser = [];
+    for (const i in data) {
+      if (!(data[i].userId in ListUser)) {
+        ListUser.push(data[i].userId);
+      }
+    }
+    for (const userID in ListUser) {
       let taskComplete = 0;
       for (const x in data) {
-        if (data[x].userId === userID) {
+        if (data[x].userId === ListUser[userID]) {
           if (data[x].completed) {
             taskComplete += 1;
           }
         }
       }
-      users[userID] = taskComplete;
+      users[ListUser[userID]] = taskComplete;
     }
     console.log(users);
   }
