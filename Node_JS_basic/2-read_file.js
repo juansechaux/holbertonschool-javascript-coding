@@ -1,32 +1,28 @@
 const fs = require('fs');
 
 function countStudents(path) {
-  fs.readFile(path, 'utf8', (err, data) => {
-    if (err) {
-      throw new Error('Cannot load the database');
-    }
-    console.log('Number of students:', data.split('\n').length - 1);
-    const setFields = new Set();
-    const arrayLines = data.split('\n');
-    for (const i in arrayLines) {
-      if (Number(i) !== 0) {
-        const line = arrayLines[i].split(',');
-        setFields.add(line[3]);
+  try {
+    const data = fs.readFileSync(path, 'utf8');
+    const lines = data.trim().split('\n'); // trim() elimina las lineas en blanco al final
+    console.log(`Number of students: ${lines.length - 1}`);
+    const studentsByField = {};
+    for (let i = 1; i < lines.length; i++) {
+      const [firstname, lastname, age, field] = lines[i].split(',');
+
+      if (!studentsByField[field]) {
+        studentsByField[field] = [];
+      }
+
+      if (firstname && lastname && age && field) { // no tengo presente las lineas que no cumple con la estructura
+        studentsByField[field].push(firstname);
       }
     }
-    for (const field of setFields) {
-      const studInField = [];
-      for (const line of arrayLines) {
-        const lineSplid = line.split(',');
-        if (field === lineSplid[3]) {
-          studInField.push(lineSplid[0]);
-        }
-      }
-      if (studInField.length !== 0) {
-        console.log(`Number of students in ${field}: ${studInField.length}. List: ${studInField}`);
-      }
+    for (const field in studentsByField) {
+      console.log(`Number of students in ${field}: ${studentsByField[field].length}. List: ${studentsByField[field].join(', ')}`);
     }
-  });
+  } catch (err) {
+    throw new Error('Cannot load the database');
+  }
 }
 
 module.exports = countStudents;
