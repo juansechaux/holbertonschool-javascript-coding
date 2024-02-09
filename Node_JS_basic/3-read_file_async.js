@@ -8,7 +8,7 @@ function countStudents(path) {
       } else {
         console.log('Number of students:', String(data.trim().split('\n').length - 1));
         const setFields = new Set();
-        const arrayLines = data.split('\n');
+        const arrayLines = data.trim().split('\n');
         for (const i in arrayLines) {
           if (Number(i) !== 0) {
             const line = arrayLines[i].split(',');
