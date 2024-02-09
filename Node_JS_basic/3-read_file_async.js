@@ -6,7 +6,7 @@ function countStudents(path) {
       if (err) {
         reject(new Error('Cannot load the database'));
       } else {
-        console.log('Number of students:', data.trim().split('\n').length - 1);
+        console.log('Number of students:', String(data.trim().split('\n').length - 1));
         const setFields = new Set();
         const arrayLines = data.split('\n');
         for (const i in arrayLines) {
