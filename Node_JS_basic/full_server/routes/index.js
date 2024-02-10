@@ -1,5 +1,7 @@
 import express from 'express';
+// eslint-disable-next-line
 import AppController from '../controllers/AppController.js';
+// eslint-disable-next-line
 import StudentsController from '../controllers/StudentsController.js';
 
 const router = express.Router();

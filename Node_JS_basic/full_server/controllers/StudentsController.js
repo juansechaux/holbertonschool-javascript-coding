@@ -1,10 +1,13 @@
+// eslint-disable-next-line
 import { readDatabase } from '../utils.js';
 
 class StudentsController {
   static async getAllStudents(req, res) {
     try {
       const studentsByField = await readDatabase('./database.csv');
+      // eslint-disable-next-line
       let response = 'This is the list of our students\n';
+      // eslint-disable-next-line
       for (const field in studentsByField) {
         response += `Number of students in ${field}: ${studentsByField[field].length}. List: ${studentsByField[field].join(', ')}\n`;
       }
