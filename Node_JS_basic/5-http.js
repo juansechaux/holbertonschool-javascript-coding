@@ -23,7 +23,7 @@ const app = http.createServer((req, res) => {
         res.end('Error reading student data: Database file not found or inaccessible');
       } else {
         const lines = data.trim().split('\n');
-        let response = `This is the list of our students:\nNumber of students: ${lines.length - 1}\n`;
+        let response = `This is the list of our students\nNumber of students: ${lines.length - 1}\n`;
         const studentsByField = {};
         for (let i = 1; i < lines.length; i += 1) {
           const [firstname, lastname, age, field] = lines[i].split(',');
