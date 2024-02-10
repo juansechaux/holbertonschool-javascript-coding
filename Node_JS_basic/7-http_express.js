@@ -3,49 +3,55 @@ const fs = require('fs');
 
 const app = express();
 
-// Ruta para el endpoint '/'
 app.get('/', (req, res) => {
-  res.send('Hello Holberton School!');
+  res.setHeader('Content-Type', 'text/plain');
+  res.statusCode = 200;
+  res.end('Hello Holberton School!');
 });
 
-// Ruta para el endpoint '/students'
 app.get('/students', (req, res) => {
-  const dbName = req.query.dbName || 'database.csv'; // Obtener el nombre de la base de datos desde la consulta
-
-  fs.readFile(dbName, 'utf8', (err, data) => {
+  fs.readFile(process.argv[2], 'utf8', (err, data) => {
     if (err) {
-      console.error(err);
-      res.status(500).send('Error reading student data');
+      res.statusCode = 500;
+      res.end('This is the list of our students\nCannot load the database');
       return;
     }
-
     const lines = data.trim().split('\n');
-    let response = 'This is the list of our students\n';
-    response += `Number of students: ${lines.length - 1}\n`;
+    const fields = lines[0].trim().split(',');
 
+    const uniqueFields = [...new Set(lines.slice(1).map((line) => line.trim().split(',')[fields.indexOf('field')]))];
     const studentsByField = {};
-    for (let i = 1; i < lines.length; i += 1) {
-      const [firstname, lastname, age, field] = lines[i].split(',');
-      if (!studentsByField[field]) {
-        studentsByField[field] = [];
+    uniqueFields.forEach((field) => {
+      studentsByField[field] = [];
+    });
+
+    lines.slice(1).forEach((line) => {
+      const values = line.trim().split(',');
+      const student = {};
+      for (let i = 0; i < fields.length; i += 1) {
+        student[fields[i]] = values[i];
       }
-      if (firstname && lastname && age && field) {
-        studentsByField[field].push(firstname);
-      }
-    }
-    // eslint-disable-next-line
-    for (const field in studentsByField) {
-      response += `Number of students in ${field}: ${studentsByField[field].length}. List: ${studentsByField[field].join(', ')}\n`;
-    }
-    response = response.slice(0, -1);
-    res.send(response);
+      studentsByField[student.field].push(student);
+    });
+
+    const response = ['This is the list of our students'];
+    const totalStudents = lines.length - 1;
+    response.push(`Number of students: ${totalStudents}`);
+    Object.keys(studentsByField).forEach((field) => {
+      response.push(`Number of students in ${field}: ${studentsByField[field].length}. List: ${studentsByField[field].map((student) => student.firstname).join(', ')}`);
+    });
+    res.statusCode = 200;
+    res.end(response.join('\n'));
   });
 });
 
-// Configurar el servidor para que escuche en el puerto 1245
-const server = app.listen(1245, () => {
-  console.log('Server listening on port 1245');
+app.use((req, res) => {
+  res.statusCode = 404;
+  res.end('Not Found');
 });
 
-// Exportar el servidor
-module.exports = server;
+app.listen(1245, () => {
+  console.log('Server is listening on port 1245');
+});
+
+module.exports = app;
