@@ -10,7 +10,7 @@ const app = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('Hello Holberton School!');
   } else if (pathname === '/students') {
-    const dbName = process.argv[2];
+    const dbName = process.argv[2] || 'database.csv';
     // let dbName;
     // if (searchParams && searchParams.get('dbName')) {
     //   dbName = searchParams.get('dbName');
